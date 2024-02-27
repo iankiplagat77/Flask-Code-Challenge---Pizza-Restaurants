@@ -1,7 +1,11 @@
 # app/routes.py
 from flask_migrate import Migrate
 from flask import Flask, jsonify, request
+<<<<<<< HEAD
 from models import db, Restaurant, Pizza, Restaurant_Pizza
+=======
+from models import db, Restaurant, Pizza, RestaurantPizza
+>>>>>>> origin/main
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
