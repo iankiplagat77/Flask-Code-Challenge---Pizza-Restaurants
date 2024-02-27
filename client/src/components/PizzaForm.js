@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function PizzaForm({ restaurantId, onAddPizza }) {
   const [pizzas, setPizzas] = useState([]);
@@ -32,7 +32,7 @@ function PizzaForm({ restaurantId, onAddPizza }) {
           setFormErrors([]);
         });
       } else {
-        r.json().then((err) => setFormErrors(err.errors));
+        return r.json().then((err) => setFormErrors(err.errors));
       }
     });
   }
@@ -53,19 +53,20 @@ function PizzaForm({ restaurantId, onAddPizza }) {
           </option>
         ))}
       </select>
-      <label htmlFor="pizza_id">Price:</label>
+      <label htmlFor="price">Price:</label>
       <input
         type="number"
+        id="price"
+        name="price"
         value={price}
         onChange={(e) => setPrice(e.target.value)}
       />
-      {formErrors.length > 0
-        ? formErrors.map((err) => (
-            <p key={err} style={{ color: "red" }}>
-              {err}
-            </p>
-          ))
-        : null}
+      {formErrors.length > 0 &&
+        formErrors.map((err, index) => (
+          <p key={index} style={{ color: "red" }}>
+            {err.price ? err.price : err.toString()}
+          </p>
+        ))}
       <button type="submit">Add To Restaurant</button>
     </form>
   );

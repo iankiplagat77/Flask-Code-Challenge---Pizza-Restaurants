@@ -26,9 +26,10 @@ class Pizza(db.Model):
     created_at = db.Column(DateTime, default=datetime.utcnow)
     updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-class RestaurantPizza(db.Model):
+class Restaurant_Pizza(db.Model):
     __tablename__ = 'restaurant_pizza'
 
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'))
     pizza_id = db.Column(db.Integer, db.ForeignKey('pizza.id'))
+    
