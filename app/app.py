@@ -1,19 +1,15 @@
 # app/routes.py
 from flask_migrate import Migrate
 from flask import Flask, jsonify, request
-<<<<<<< HEAD
-from models import db, Restaurant, Pizza, Restaurant_Pizza
-=======
-from models import db, Restaurant, Pizza, RestaurantPizza
->>>>>>> origin/main
+
+from models import db, Restaurant, Pizza, Restaurant_pizza
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-migrate=Migrate(app,db)
+migrate = Migrate(app, db)
 db.init_app(app)
-
 
 @app.route('/restaurants', methods=['GET'])
 def get_restaurants():
@@ -28,9 +24,10 @@ def get_restaurants():
 def get_restaurant(id):
     restaurant = Restaurant.query.get(id)
     if restaurant:
+        restaurant_pizzas = Restaurant_pizza.query.filter_by(restaurant_id=id).all()
         pizza_list = [
-            {"id": pizza.id, "name": pizza.name, "ingredients": pizza.ingredients}
-            for pizza in restaurant.pizzas
+            {"id": rp.pizza.id, "name": rp.pizza.name, "ingredients": rp.pizza.ingredients, "price": rp.price}
+            for rp in restaurant_pizzas
         ]
         return jsonify({"id": restaurant.id, "name": restaurant.name, "address": restaurant.address, "pizzas": pizza_list})
     else:
@@ -66,7 +63,7 @@ def create_restaurant_pizza():
         return jsonify({"errors": ["price, pizza_id, and restaurant_id are required"]}), 400
 
     try:
-        restaurant_pizza = Restaurant_Pizza(price=price, pizza_id=pizza_id, restaurant_id=restaurant_id)
+        restaurant_pizza = Restaurant_pizza(price=price, pizza_id=pizza_id, restaurant_id=restaurant_id)
         db.session.add(restaurant_pizza)
         db.session.commit()
 
@@ -76,5 +73,5 @@ def create_restaurant_pizza():
         db.session.rollback()
         return jsonify({"errors": [str(e)]}), 500
     
-if __name__ =='__main__':
+if __name__ == '__main__':
     app.run(port=5555, debug=True)
